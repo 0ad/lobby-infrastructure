@@ -1,0 +1,4 @@
+---
+lobby_bot_base_dir: "/opt/lobby"
+lobby_bot_group_name: "lobby-bots"
+lobby_config_dir: "/etc/lobby"

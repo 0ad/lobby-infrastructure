@@ -1,0 +1,23 @@
+[Unit]
+Description=Create a new self-signed certificate for localhost every 30 days
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/create-self-signed-ejabberd-cert.sh
+ExecStartPost=/bin/systemctl reload ejabberd
+
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateMounts=true
+PrivateNetwork=true
+PrivateTmp=true
+PrivateUsers=false
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=true
+RestrictAddressFamilies=AF_UNIX

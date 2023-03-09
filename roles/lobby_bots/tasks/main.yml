@@ -1,0 +1,128 @@
+---
+
+- name: Remove possibly pre-existing lobby user
+  ansible.builtin.user:
+    name: lobby
+    state: absent
+    remove: true
+
+- name: Add a common group for bots
+  ansible.builtin.group:
+    name: "{{ lobby_bot_group_name }}"
+
+- name: Create lobby bot base directory
+  ansible.builtin.file:
+    path: "{{ lobby_bot_base_dir }}"
+    state: directory
+    owner: "root"
+    group: "{{ lobby_bot_group_name }}"
+    mode: 0755
+
+- name: Add users for the bots
+  ansible.builtin.user:
+    name: "{{ bot.name }}"
+    group: "{{ lobby_bot_group_name }}"
+    home: "{{ lobby_bot_base_dir }}/{{ bot.name }}"
+    create_home: true
+    shell: /bin/sh
+    system: true
+  loop: "{{ bots }}"
+  loop_control:
+    loop_var: bot
+
+- name: Install lobby-bots code
+  ansible.builtin.pip:
+    name: "{{ bot.source }}"
+    virtualenv: "{{ lobby_bot_base_dir }}/{{ bot.name }}/code"
+  become: true
+  become_method: community.general.sudosu
+  become_user: "{{ bot.name }}"
+  loop: "{{ bots }}"
+  loop_control:
+    loop_var: bot
+
+- name: Check if databases exist
+  ansible.builtin.stat:
+    path: "/{{ lobby_bot_base_dir }}/{{ bot.name }}/db.sqlite"
+  changed_when: false
+  register: sqlite_db_exists
+  loop: "{{ bots | selectattr('type', 'equalto', 'echelon') }}"
+  loop_control:
+    loop_var: bot
+
+- name: Create sqlite databases
+  ansible.builtin.command: "{{ lobby_bot_base_dir }}/{{ item.bot.name }}/code/bin/python
+    -m xpartamupp.lobby_ranking create
+    --database-url sqlite:////{{ lobby_bot_base_dir }}/{{ item.bot.name }}/db.sqlite"
+  become: true
+  become_method: community.general.sudosu
+  become_user: "{{ item.bot.name }}"
+  when: not item.stat.exists
+  changed_when: false
+  loop: "{{ sqlite_db_exists.results }}"
+
+- name: Create config directory
+  ansible.builtin.file:
+    path: "{{ lobby_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Create config file
+  ansible.builtin.template:
+    src: environment-file.j2
+    dest: "{{ lobby_config_dir }}/{{ bot.name }}"
+    owner: root
+    group: root
+    mode: 0600
+  loop: "{{ bots }}"
+  loop_control:
+    loop_var: bot
+
+- name: Check if ejabberd accounts exist
+  ansible.builtin.command: "ejabberdctl check_account {{ bot.jid.split('@')[0] }}
+    {{ bot.jid.split('@')[1] }}"
+  failed_when: false
+  changed_when: false
+  register: ejabberd_users_present
+  loop: "{{ bots }}"
+  loop_control:
+    loop_var: bot
+
+- name: Create ejabberd accounts if they don't exist yet
+  ansible.builtin.command: "ejabberdctl register {{ user.bot.jid.split('@')[0] }}
+    {{ user.bot.jid.split('@')[1] }} {{ user.bot.config.PASSWORD }}"
+  when: user.rc == 1
+  changed_when: false
+  loop: "{{ ejabberd_users_present.results }}"
+  loop_control:
+    loop_var: user
+
+- name: Create systemd service files
+  ansible.builtin.template:
+    src: "{{ bot.type }}-systemd-service.j2"
+    dest: "/etc/systemd/system/{{ bot.name }}.service"
+    owner: root
+    group: root
+    mode: 0644
+  loop: "{{ bots }}"
+  loop_control:
+    loop_var: bot
+
+- name: Enable systemd services
+  ansible.builtin.systemd:
+    name: "{{ bot.name }}"
+    enabled: true
+    daemon_reload: true
+  loop: "{{ bots }}"
+  loop_control:
+    loop_var: bot
+
+- name: Start systemd services
+  ansible.builtin.systemd:
+    name: "{{ bot.name }}"
+    state: started
+  loop: "{{ bots }}"
+  loop_control:
+    loop_var: bot

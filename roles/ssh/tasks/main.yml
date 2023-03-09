@@ -1,0 +1,19 @@
+---
+- name: Install openssh-server
+  ansible.builtin.apt:
+    name: openssh-server
+
+- name: Configure openssh-server
+  ansible.builtin.copy:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0644
+  notify: Reload SSH service
+
+- name: Enable the SSH service
+  ansible.builtin.systemd:
+    name: ssh
+    enabled: true
+    state: started

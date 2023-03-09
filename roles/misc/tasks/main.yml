@@ -1,0 +1,36 @@
+---
+- name: Ensure undesired ntp services aren't installed
+  ansible.builtin.apt:
+    name:
+      - chrony
+      - ntp
+    state: absent
+    purge: true
+
+- name: Install some additional packages
+  ansible.builtin.apt:
+    name:
+      - aptitude
+      - bash
+      - curl
+      - git
+      - iftop
+      - iotop
+      - less
+      - molly-guard
+      - mtr-tiny
+      - nano
+      - net-tools
+      - nmap
+      - rsync
+      - screen
+      - sqlite3
+      - sudo
+      - systemd-timesyncd
+    state: present
+
+- name: Enable systemd timesyncd
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+    enabled: true
+    state: started

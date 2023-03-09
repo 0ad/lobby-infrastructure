@@ -1,0 +1,147 @@
+---
+- name: Install ejabberd
+  ansible.builtin.apt:
+    name: ejabberd
+    state: present
+
+- name: Systemd service unit for MUC log compression
+  ansible.builtin.copy:
+    src: ejabberd-compress-muc-logs.service
+    dest: /etc/systemd/system/ejabberd-compress-muc-logs.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Systemd timer unit for MUC log compression
+  ansible.builtin.copy:
+    src: ejabberd-compress-muc-logs.timer
+    dest: /etc/systemd/system/ejabberd-compress-muc-logs.timer
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable systemd timer for MUC log compression
+  ansible.builtin.systemd:
+    name: ejabberd-compress-muc-logs.timer
+    enabled: true
+    state: started
+    daemon_reload: true
+
+- name: Create /etc/default/ejabberd
+  ansible.builtin.template:
+    src: ejabberd-default.j2
+    dest: /etc/default/ejabberd
+    owner: root
+    group: root
+    mode: 0644
+  register: ejabberd_default
+
+- name: Create script for generating self-signed certificates for localhost
+  ansible.builtin.copy:
+    src: create-self-signed-ejabberd-cert.sh
+    dest: /usr/local/bin/create-self-signed-ejabberd-cert.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Systemd service unit for generating self-signed certificates
+  ansible.builtin.copy:
+    src: ejabberd-create-self-signed-certificate.service
+    dest: /etc/systemd/system/ejabberd-create-self-signed-certificate.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Systemd timer unit for generating self-signed certificates
+  ansible.builtin.copy:
+    src: ejabberd-create-self-signed-certificate.timer
+    dest: /etc/systemd/system/ejabberd-create-self-signed-certificate.timer
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable systemd timer for generating self-signed certificates
+  ansible.builtin.systemd:
+    name: ejabberd-create-self-signed-certificate.timer
+    enabled: true
+    state: started
+    daemon_reload: true
+
+- name: Remove existing default certificate
+  ansible.builtin.file:
+    path: /etc/ejabberd/ejabberd.pem
+    state: absent
+
+- name: Check if a certificate for localhost exists
+  ansible.builtin.stat:
+    path: /etc/ejabberd/localhost.pem
+  register: localhost_cert_exists
+
+- name: Create certificate for localhost if it doesn't exist
+  ansible.builtin.systemd:
+    name: ejabberd-create-self-signed-certificate.service
+    state: restarted
+  when: localhost_cert_exists.stat.isreg is not defined
+
+- name: Create contrib modules directory
+  ansible.builtin.file:
+    path: /opt/ejabberd-modules/sources/
+    state: directory
+    owner: ejabberd
+    group: ejabberd
+    mode: 0755
+
+- name: Copy mod_ipstamp module
+  ansible.builtin.copy:
+    src: mod_ipstamp/
+    dest: /opt/ejabberd-modules/sources/mod_ipstamp/
+    owner: ejabberd
+    group: ejabberd
+    mode: 0644
+    directory_mode: 0755
+
+- name: Restart ejabberd  # noqa: no-handler
+  ansible.builtin.systemd:
+    name: ejabberd
+    state: restarted
+  when: ejabberd_default.changed
+
+- name: Check whether mod_ipstamp is already installed
+  ansible.builtin.shell: ejabberdctl modules_installed | grep mod_ipstamp  # noqa: risky-shell-pipe
+  failed_when: false
+  changed_when: false
+  register: mod_ipstamp_installed
+
+- name: Install mod_ipstamp module
+  ansible.builtin.command: ejabberdctl module_install mod_ipstamp
+  when: mod_ipstamp_installed.rc != 0
+  changed_when: false
+
+- name: Create directories for lobby logs
+  ansible.builtin.file:
+    path: /var/log/pyrogenesis/lobby
+    state: directory
+    owner: ejabberd
+    group: ejabberd
+    mode: 0755
+
+- name: Configure ejabberd
+  ansible.builtin.template:
+    src: ejabberd.yml.j2
+    dest: /etc/ejabberd/ejabberd.yml
+    owner: ejabberd
+    group: ejabberd
+    mode: 0600
+    lstrip_blocks: true
+  register: ejabberd_config
+
+- name: Reload config to enable the mod_ipstamp module
+  ansible.builtin.command: ejabberdctl reload_config  # noqa: no-handler
+  when: ejabberd_config.changed
+  changed_when: false
+
+- name: Create MUC rooms
+  ansible.builtin.include_tasks: lobby_muc_room.yml
+  loop: "{{ ejabberd_lobby_muc_rooms | dict2items }}"
+  loop_control:
+    loop_var: room

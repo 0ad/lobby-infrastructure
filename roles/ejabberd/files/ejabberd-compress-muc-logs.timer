@@ -1,0 +1,10 @@
+[Unit]
+Description=Run daily compression of mod_muc logs for ejabberd
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=1h
+FixedRandomDelay=true
+
+[Install]
+WantedBy=timers.target

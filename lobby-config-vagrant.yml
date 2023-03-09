@@ -1,0 +1,77 @@
+---
+# List of domains ejabberd should serve for XMPP. In addition to the
+# domains mentioned in this option, ejabberd always serves "localhost".
+domains: []
+
+# Set to true if you want to register a new Letsencrypt account if
+# none exists yet and want to request a new TLS-certificate.
+# Please mind that you are agreeing to the ToS of Letsencrypt when
+# doing so. The host you're deploying the code to also needs to have
+# the domains defined above to be configured in DNS to point to the
+# host for it to succeed. If set to false you need to bring your
+# certbot configuration and ensure certificates exist for the domains
+# configured above.
+acme_request_new_certificates: false
+
+# List of dictionaries to configure the pyrogenesis lobby bots to be
+# present.
+bots: [
+  {
+    "name": "xpartamupp",
+    "jid": "xpartamupp@localhost",
+    "source": "git+https://github.com/0ad/lobby-bots@master",
+    "type": "xpartamupp",
+    "config": {
+      "LOGIN": "xpartamupp",
+      "PASSWORD": xpartamupp,
+      "NICKNAME": "WFGBot",
+      "HOST": "localhost",
+      "ROOM": "arena"
+    }
+  },
+  {
+    "name": "echelon",
+    "jid": "echelon@localhost",
+    "source": "git+https://github.com/0ad/lobby-bots@master",
+    "type": "echelon",
+    "config": {
+      "LOGIN": "echelon",
+      "PASSWORD": echelon,
+      "NICKNAME": "RatingsBot",
+      "HOST": "localhost",
+      "ROOM": "arena"
+    }
+  },
+]
+# List of local admin users to create on the host. Each user does have
+# password-less sudo permissions.
+# Each item of the list has to contain a "username" key and has an
+# optional "ssh_keys" key which allows configuring one or multiple SSH
+# public keys.
+# admins: [
+#   {
+#     "username": "admin",
+#     "ssh_keys": [
+#       "ssh-ed25519 use_a_real_key_here admin@localhost"
+#     ]
+#   }
+# ]
+admins: []
+
+# List of JIDs of all users which should have ejabberd admin
+# permissions. Note that these XMPP users need to be created manually.
+ejabberd_admins: [
+  "admin@localhost"
+]
+# List of JIDs of all users which should have MUC admin permissions to
+# the lobby MUC rooms.  Note that these XMPP users need to be created
+# manually.
+ejabberd_muc_admins: [
+  "admin@localhost"
+]
+# Dictionary of MUC rooms to create automatically. The key for each
+# item is the JID of the MUC room and the value is used as room
+# description.
+ejabberd_lobby_muc_rooms: {
+  "arena@conference.localhost": "0 A.D. Multiplayer Lobby"
+}
