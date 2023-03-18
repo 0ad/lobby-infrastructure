@@ -86,7 +86,7 @@
   failed_when: false
   changed_when: false
   register: ejabberd_users_present
-  loop: "{{ bots }}"
+  loop: "{{ bots | uniq_by_key('jid') }}"
   loop_control:
     loop_var: bot
 
