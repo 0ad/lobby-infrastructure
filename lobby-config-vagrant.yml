@@ -42,6 +42,46 @@ bots: [
       "ROOM": "arena"
     }
   },
+  {
+    "name": "chat-monitor",
+    "jid": "moderation-bot@localhost",
+    "source": "git+https://gitlab.com/0ad/lobby-moderation@master",
+    "type": "chat-monitor",
+    "config": {
+      "LOGIN": "moderation-bot",
+      "PASSWORD": "moderation-bot",
+      "NICKNAME": "ModerationBot",
+      "HOST": "localhost",
+      "ROOMS": "arena"
+    }
+  },
+  {
+    "name": "chatbot-interface",
+    "jid": "moderation-bot@localhost",
+    "source": "git+https://gitlab.com/0ad/lobby-moderation@master",
+    "type": "chatbot-interface",
+    "config": {
+      "LOGIN": "moderation-bot",
+      "PASSWORD": "moderation-bot",
+      "NICKNAME": "ModerationBot",
+      "HOST": "localhost",
+      "COMMAND_ROOM": "moderation",
+      "COMMAND_PASSWORD": "moderation"
+    }
+  },
+  {
+    "name": "moderation",
+    "jid": "moderation-bot@localhost",
+    "source": "git+https://gitlab.com/0ad/lobby-moderation@master",
+    "type": "moderation",
+    "config": {
+      "LOGIN": "moderation-bot",
+      "PASSWORD": "moderation-bot",
+      "NICKNAME": "ModerationBot",
+      "HOST": "localhost",
+      "ROOMS": "arena"
+    }
+  },
 ]
 # List of local admin users to create on the host. Each user does have
 # password-less sudo permissions.
@@ -73,5 +113,6 @@ ejabberd_muc_admins: [
 # item is the JID of the MUC room and the value is used as room
 # description.
 ejabberd_lobby_muc_rooms: {
-  "arena@conference.localhost": "0 A.D. Multiplayer Lobby"
+  "arena@conference.localhost": "0 A.D. Multiplayer Lobby",
+  "moderation@conference.localhost": "Room for moderators"
 }

@@ -41,7 +41,7 @@
   loop_control:
     loop_var: bot
 
-- name: Check if databases exist
+- name: Check if databases for lobby-bots exist
   ansible.builtin.stat:
     path: "/{{ lobby_bot_base_dir }}/{{ bot.name }}/db.sqlite"
   changed_when: false
@@ -50,7 +50,7 @@
   loop_control:
     loop_var: bot
 
-- name: Create sqlite databases
+- name: Create sqlite databases for lobby-bots
   ansible.builtin.command: "{{ lobby_bot_base_dir }}/{{ item.bot.name }}/code/bin/python
     -m xpartamupp.lobby_ranking create
     --database-url sqlite:////{{ lobby_bot_base_dir }}/{{ item.bot.name }}/db.sqlite"
@@ -60,6 +60,26 @@
   when: not item.stat.exists
   changed_when: false
   loop: "{{ sqlite_db_exists.results }}"
+
+- name: Check if databases for lobby-moderation exist
+  ansible.builtin.stat:
+    path: "/{{ lobby_bot_base_dir }}/{{ bot.name }}/db.sqlite"
+  changed_when: false
+  register: sqlite_db_exists_moderation
+  loop: "{{ bots | selectattr('type', 'in', ['chat-monitor', 'moderation']) }}"
+  loop_control:
+    loop_var: bot
+
+- name: Create sqlite databases for lobby-moderation
+  ansible.builtin.command: "{{ lobby_bot_base_dir }}/{{ item.bot.name }}/code/bin/python
+    -m moderation.data.create_db
+    --database-url sqlite:////{{ lobby_bot_base_dir }}/{{ item.bot.name }}/db.sqlite"
+  become: true
+  become_method: community.general.sudosu
+  become_user: "{{ item.bot.name }}"
+  when: not item.stat.exists
+  changed_when: false
+  loop: "{{ sqlite_db_exists_moderation.results }}"
 
 - name: Create config directory
   ansible.builtin.file:

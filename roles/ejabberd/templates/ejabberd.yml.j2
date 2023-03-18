@@ -150,10 +150,13 @@ acl:
       {% for jid in ejabberd_muc_admins %}
       - "{{ jid }}"
       {% endfor %}
+      {% for bot in bots | selectattr('type', 'equalto', 'moderation') %}
+      - "{{ bot.jid }}"
+      {% endfor %}
 
   bots:
     user:
-      {% for bot in bots %}
+      {% for bot in bots | selectattr('type', 'equalto', 'xpartamupp') %}
       - "{{ bot.jid }}"
       {% endfor %}
 
