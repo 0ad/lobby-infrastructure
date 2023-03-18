@@ -182,13 +182,11 @@ access_rules:
   ipbots:
     - allow: bots
   muc_admin:
-    allow:
-      - admin
-      - muc_admins
+    - allow: admin
+    - allow: muc_admins
   pubsub_createnode:
-    allow:
-      - admin
-      - bots
+    - allow: admin
+    - allow: bots
   register:
     - deny: blocked
     - allow: validname
@@ -280,8 +278,7 @@ modules:
   mod_muc:
     access:
       - allow
-    access_admin:
-      - allow: muc_admin
+    access_admin: muc_admin
     access_create: muc_admin
     access_persistent: muc_admin
     access_mam:
