@@ -31,13 +31,13 @@ log_rotate_count: 0
 
 hosts:
   - localhost
-{% for domain in domains -%}
+{% for domain in domains %}
   - {{ domain }}
 {% endfor %}
 
 certfiles:
   - "/etc/ejabberd/localhost.pem"
-{% for domain in domains -%}
+{% for domain in domains %}
   - /etc/letsencrypt/live/{{ domain }}/fullchain.pem
   - /etc/letsencrypt/live/{{ domain }}/privkey.pem
 {% endfor %}
