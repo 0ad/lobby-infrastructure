@@ -14,8 +14,10 @@
       - bash
       - curl
       - git
+      - hdparm
       - iftop
       - iotop
+      - iptables
       - less
       - molly-guard
       - mtr-tiny
