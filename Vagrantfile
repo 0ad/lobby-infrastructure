@@ -13,5 +13,6 @@ Vagrant.configure("2") do |config|
     ansible.playbook = "site.yml"
   end
 
+  config.vm.network "forwarded_port", guest: 3478, host: 3478, protocol: "udp"
   config.vm.network "forwarded_port", guest: 5222, host: 5222
 end

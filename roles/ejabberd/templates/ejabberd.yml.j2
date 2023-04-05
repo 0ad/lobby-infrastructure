@@ -107,11 +107,11 @@ listen:
     request_handlers:
       /admin: ejabberd_web_admin
 #      /.well-known/acme-challenge: ejabberd_acme
-#  -
-#    port: 3478
+  -
+    port: 3478
+    transport: udp
+    module: ejabberd_stun
 #    ip: "0.0.0.0"
-#    transport: udp
-#    module: ejabberd_stun
 #    use_turn: true
 #    ## The server's public IPv4 address:
 #    # turn_ipv4_address: "203.0.113.3"
