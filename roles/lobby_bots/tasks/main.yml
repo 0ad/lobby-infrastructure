@@ -9,6 +9,7 @@
 - name: Add a common group for bots
   ansible.builtin.group:
     name: "{{ lobby_bot_group_name }}"
+    system: true
 
 - name: Create lobby bot base directory
   ansible.builtin.file:
