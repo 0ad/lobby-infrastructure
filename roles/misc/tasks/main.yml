@@ -36,3 +36,12 @@
     name: systemd-timesyncd
     enabled: true
     state: started
+
+# That's a workaround to ensure the bots always connect to localhost,
+# as Slixmpp currently doesn't honor explicitly configured addresses
+# used to connect for reconnections.
+- name: Let configured domains resolve to localhost
+  ansible.builtin.lineinfile:
+    dest: /etc/hosts
+    regexp: "^127.0.0.1"
+    line: "127.0.0.1\tlocalhost{%- for domain in domains %} {{ domain }}{%- endfor -%}"
