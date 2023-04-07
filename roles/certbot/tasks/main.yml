@@ -5,13 +5,18 @@
     name: certbot
     state: present
 
+- name: Create a group for users with access to certificates
+  ansible.builtin.group:
+    name: certusers
+    system: true
+
 - name: Create directories for ACME accounts
   ansible.builtin.file:
     path: "/etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory"
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: 0700
 
 - name: Check if an ACME account is already present
   ansible.builtin.find:
@@ -36,6 +41,17 @@
     recurse: false
     file_type: directory
   register: acme_account
+
+- name: Create certificate directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: certusers
+    mode: 0750
+  loop:
+    - "/etc/letsencrypt/archive"
+    - "/etc/letsencrypt/live"
 
 - name: Get a TLS certificate
   ansible.builtin.command: "certbot certonly --standalone --account

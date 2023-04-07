@@ -4,6 +4,13 @@
     name: ejabberd
     state: present
 
+- name: Add ejabberd user to certusers group
+  ansible.builtin.user:
+    name: ejabberd
+    groups:
+      - certusers
+    system: true
+
 - name: Systemd service unit for MUC log compression
   ansible.builtin.copy:
     src: ejabberd-compress-muc-logs.service
