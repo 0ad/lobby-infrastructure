@@ -10,7 +10,7 @@ Environment=PATH={{ lobby_bot_base_dir }}/{{ bot.name }}/code/bin
 EnvironmentFile={{ lobby_config_dir }}/{{ bot.name }}
 ExecStart=python3 {{ lobby_bot_base_dir }}/{{ bot.name }}/code/bin/chat_monitor \
           --login ${LOGIN} --password ${PASSWORD} --nickname ${NICKNAME} --domain ${HOST} \
-          --rooms ${ROOMS} -d -t \
+          --rooms {%- for room in bot.config.ROOMS.split(" ") %} {{ room }}{%- endfor %} -d -t \
           --database-url sqlite:////{{ lobby_bot_base_dir }}/{{ bot.name }}/db.sqlite
 Restart=on-failure
 
