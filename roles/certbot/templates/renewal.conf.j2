@@ -1,5 +1,5 @@
 renew_before_expiry = 60 days
-version = 1.12.0
+version = 2.1.0
 archive_dir = /etc/letsencrypt/archive/{{ domain }}
 cert = /etc/letsencrypt/live/{{ domain }}/cert.pem
 privkey = /etc/letsencrypt/live/{{ domain }}/privkey.pem
@@ -12,3 +12,4 @@ account = {{ acme_account.files[0]["path"] | split("/") | last }}
 authenticator = standalone
 pref_challs = http-01,
 server = https://acme-v02.api.letsencrypt.org/directory
+key_type = ecdsa
