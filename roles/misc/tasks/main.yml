@@ -4,6 +4,7 @@
     name:
       - chrony
       - ntp
+      - rsyslog
     state: absent
     purge: true
 
