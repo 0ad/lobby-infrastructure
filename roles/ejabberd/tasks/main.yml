@@ -126,11 +126,11 @@
 
 - name: Create directories for lobby logs
   ansible.builtin.file:
-    path: /var/log/pyrogenesis/lobby
+    path: /var/log/ejabberd/muc
     state: directory
     owner: ejabberd
-    group: ejabberd
-    mode: 0755
+    group: adm
+    mode: 02755
 
 - name: Configure ejabberd
   ansible.builtin.template:
