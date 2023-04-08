@@ -19,7 +19,7 @@
     - misc
     - users
     - certbot
-    # - {role: certbot, when: domains}
+    - openssl
     - ejabberd
     - python
     - lobby_bots
