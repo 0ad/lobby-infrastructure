@@ -47,8 +47,9 @@ define_macro:
   'TLS_CIPHERS': "HIGH:!aNULL:!eNULL:!3DES:@STRENGTH"
   'TLS_OPTIONS':
     - "no_sslv3"
-    # - "no_tlsv1" ## old windows gloox only supports TLS v1.0. Can be removed once a26 and older versions aren't supported anymore
+    # - "no_tlsv1" # old windows gloox only supports TLS v1.0. Can be removed once a26 and older versions aren't supported anymore
     - "no_tlsv1_1"
+    - "no_tlsv1_3"  # gloox 1.0.25 & 1.0.26 have TLS v1.3 enabled, but 0ad fails to connect when TLS v1.3 is enabled on server side
     - "cipher_server_preference"
     - "no_compression"
     # 'DH_FILE': "/path/to/dhparams.pem"
