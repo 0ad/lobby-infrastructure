@@ -1,0 +1,9 @@
+---
+- name: Install necessary Python packages
+  ansible.builtin.apt:
+    name:
+      - python-is-python3
+      - python3
+      - python3-pip
+      - python3-virtualenv
+    state: present

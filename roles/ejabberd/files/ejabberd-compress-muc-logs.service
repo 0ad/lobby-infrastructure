@@ -1,0 +1,24 @@
+[Unit]
+Description=Compression of mod_muc logs for ejabberd
+RequiresMountsFor=/var/log
+
+[Service]
+Type=oneshot
+User=ejabberd
+ExecStart=find /var/log/ejabberd/muc/ -type f -name '*.txt' -atime +1 -exec gzip {} \;
+
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateMounts=true
+PrivateNetwork=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=full
+RestrictAddressFamilies=none

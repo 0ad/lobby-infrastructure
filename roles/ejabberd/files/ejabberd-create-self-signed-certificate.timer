@@ -1,0 +1,9 @@
+[Unit]
+Description=Create a new self-signed certificate for localhost every 30 days
+
+[Timer]
+OnCalendar=monthly
+RandomizedDelaySec=1h
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,34 @@
+---
+- name: Check if the room exists
+  ansible.builtin.command: "ejabberdctl get_room_occupants {{ room.key | split('@') | first }}
+    {{ room.key | split('@') | last }}"
+  register: room_exists
+  changed_when: false
+  failed_when: false
+
+- name: Create room
+  ansible.builtin.command: "ejabberdctl create_room {{ room.key | split('@') | first }}
+    {{ room.key | split('@') | last }}
+    {{ room.key | split('@') | last | regex_replace('^conference\\.(.*)$', '\\1') }}"
+  when: room_exists.rc == 1
+  changed_when: false
+
+- name: Set room title
+  ansible.builtin.command: "ejabberdctl change_room_option {{ room.key | split('@') | first }}
+    {{ room.key | split('@') | last }} title {{ room.key | split('@') | first }}"
+  when: room_exists.rc == 1
+  changed_when: false
+
+- name: Set room description
+  ansible.builtin.command: "ejabberdctl change_room_option {{ room.key | split('@') | first }}
+    {{ room.key | split('@') | last }} description '{{ room.value }}'"
+  when: room_exists.rc == 1
+  changed_when: false
+
+# Somehow the max_users default room option in ejabberd.yml doesn't
+# seem to work, so we have to manually do it here.
+- name: Set maximum room users
+  ansible.builtin.command: "ejabberdctl change_room_option {{ room.key | split('@') | first }}
+    {{ room.key | split('@') | last }} max_users 1000"
+  when: room_exists.rc == 1
+  changed_when: false

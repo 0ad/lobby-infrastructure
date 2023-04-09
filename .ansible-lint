@@ -1,0 +1,5 @@
+---
+# downgrade schema[tasks] from error to warning, as it considers
+# "become_method: community.general.sudosu" not to be valid
+warn_list:
+  - schema[tasks]

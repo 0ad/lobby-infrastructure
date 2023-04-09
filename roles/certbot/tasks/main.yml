@@ -1,0 +1,99 @@
+---
+
+- name: Install certbot
+  ansible.builtin.apt:
+    name: certbot
+    state: present
+
+- name: Create a group for users with access to certificates
+  ansible.builtin.group:
+    name: certusers
+    system: true
+
+- name: Create directories for ACME accounts
+  ansible.builtin.file:
+    path: "/etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Check if an ACME account is already present
+  ansible.builtin.find:
+    paths: /etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory
+    recurse: false
+    file_type: directory
+  register: acme_accounts
+
+- name: Fail for unsupported ACME account configuration
+  ansible.builtin.fail:
+    msg: Multiple ACME accounts configured. We don't support that.
+  when: acme_accounts.files|length > 1
+
+- name: Create ACME account
+  ansible.builtin.command: certbot register --register-unsafely-without-email --agree-tos
+  when: acme_request_new_certificates and acme_accounts.files|length == 0
+  changed_when: false
+
+- name: Get ACME account id
+  ansible.builtin.find:
+    paths: /etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/
+    recurse: false
+    file_type: directory
+  register: acme_account
+
+- name: Create certificate directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: certusers
+    mode: 0750
+  loop:
+    - "/etc/letsencrypt/archive"
+    - "/etc/letsencrypt/live"
+
+- name: Get a TLS certificate
+  ansible.builtin.command: "certbot certonly --standalone --account
+    {{ acme_account.files[0]['path'] | split('/') | last }} -d {{ domain }}"
+  loop: "{{ domains }}"
+  loop_control:
+    loop_var: domain
+  when: acme_request_new_certificates
+  changed_when: false
+
+- name: Create directory certificate renewal configuration
+  ansible.builtin.file:
+    path: "/etc/letsencrypt/renewal/"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Configure certificate renewal
+  ansible.builtin.template:
+    src: renewal.conf.j2
+    dest: "/etc/letsencrypt/renewal/{{ domain }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  loop: "{{ domains }}"
+  loop_control:
+    loop_var: domain
+  when: acme_account.files|length > 0
+
+- name: Create directory for post deploy hooks
+  ansible.builtin.file:
+    path: "/etc/letsencrypt/renewal-hooks/deploy/"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create ejabberd post-deploy hook
+  ansible.builtin.copy:
+    src: ejabberd.sh
+    dest: /etc/letsencrypt/renewal-hooks/deploy/ejabberd.sh
+    owner: root
+    group: root
+    mode: 0755

@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.idea
+.vagrant
+hosts
+lobby-config.yml

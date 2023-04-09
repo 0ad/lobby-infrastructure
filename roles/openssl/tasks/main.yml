@@ -1,0 +1,13 @@
+---
+- name: Install OpenSSL
+  ansible.builtin.apt:
+    name: openssl
+    state: present
+
+- name: Configure OpenSSL to still allow TLSv1.0
+  ansible.builtin.copy:
+    src: openssl.cnf
+    dest: /etc/ssl/openssl.cnf
+    owner: root
+    group: root
+    mode: 0644

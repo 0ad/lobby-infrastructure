@@ -1,0 +1,48 @@
+---
+- name: Ensure undesired ntp services aren't installed
+  ansible.builtin.apt:
+    name:
+      - chrony
+      - ntp
+      - rsyslog
+    state: absent
+    purge: true
+
+- name: Install some additional packages
+  ansible.builtin.apt:
+    name:
+      - aptitude
+      - bash
+      - curl
+      - git
+      - hdparm
+      - iftop
+      - iotop
+      - iptables
+      - less
+      - molly-guard
+      - mtr-tiny
+      - nano
+      - net-tools
+      - nmap
+      - rsync
+      - screen
+      - sqlite3
+      - sudo
+      - systemd-timesyncd
+    state: present
+
+- name: Enable systemd timesyncd
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+    enabled: true
+    state: started
+
+# That's a workaround to ensure the bots always connect to localhost,
+# as Slixmpp currently doesn't honor explicitly configured addresses
+# used to connect for reconnections.
+- name: Let configured domains resolve to localhost
+  ansible.builtin.lineinfile:
+    dest: /etc/hosts
+    regexp: "^127.0.0.1"
+    line: "127.0.0.1\tlocalhost{%- for domain in domains %} {{ domain }}{%- endfor -%}"
