@@ -159,6 +159,12 @@ acl:
 
   bots:
     user:
+      {% for jid in bots | map(attribute="jid") | unique %}
+      - "{{ jid }}"
+      {% endfor %}
+
+  ipbots:
+    user:
       {% for bot in bots | selectattr('type', 'equalto', 'xpartamupp') %}
       - "{{ bot.jid }}"
       {% endfor %}
@@ -186,7 +192,7 @@ access_rules:
     allow: admin
   ## Expected by the ipstamp module for XpartaMuPP
   ipbots:
-    - allow: bots
+    - allow: ipbots
   muc_admin:
     - allow: admin
     - allow: muc_admins
@@ -246,10 +252,9 @@ shaper_rules:
     5000: admin
     100: all
   c2s_shaper:
-    none: admin
-    normal:
-      - all
-      - bots
+    - none: admin
+    - fast: bots
+    - normal
   s2s_shaper: fast
 
 modules:
