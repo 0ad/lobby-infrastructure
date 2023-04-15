@@ -30,8 +30,8 @@ utilized storage increases primarily because of system and chat logs.
 For testing purposes you can provision a virtual machine with a complete setup using
 [Vagrant](https://www.vagrantup.com/). To do so follow the following steps:
 
-1. Install [Vagrant](https://www.vagrantup.com/)
-2. Install [Ansible](https://www.ansible.com/)
+1. Install [VirtualBox](https://www.virtualbox.org/)
+2. Install [Vagrant](https://www.vagrantup.com/)
 3. Run `vagrant up` from the project directory and wait a few minutes, while Vagrant fetches the
    base image from the internet and installs and configures all necessary software.
 4. **Back up your existing Pyrogenesis configuration, as the following steps will override the
