@@ -23,6 +23,7 @@
     - ejabberd
     - python
     - lobby_bots
+    - borgmatic
   post_tasks:
     - name: Push Ansible variable file with sensitive lobby parameters
       ansible.builtin.copy:

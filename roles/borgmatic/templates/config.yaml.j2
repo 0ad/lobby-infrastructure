@@ -1,0 +1,29 @@
+---
+location:
+    source_directories:
+        - /tmp/borgmatic
+
+    repositories:
+        - {{ borg_repo_location }}
+
+retention:
+    keep_daily: 7
+    keep_weekly: 5
+    keep_monthly: 12
+    keep_yearly: 5
+
+consistency:
+    checks:
+        - name: repository
+        - name: archives
+          frequency: 2 weeks
+
+hooks:
+    before_backup:
+        - /usr/local/bin/dump-ejabberd.sh
+{% for bot in bots | selectattr('type', 'in', ['echelon', 'chat-monitor', 'moderation']) %}
+        - /usr/local/bin/dump-sqlite.sh /opt/lobby/{{ bot.name }}/db.sqlite {{ bot.name }}
+{% endfor %}
+
+    after_backup:
+        - rm -R /tmp/borgmatic/
