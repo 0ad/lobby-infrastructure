@@ -90,6 +90,12 @@
     state: restarted
   when: localhost_cert_exists.stat.isreg is not defined
 
+- name: Ensure ejabberd is enabled and running
+  ansible.builtin.systemd:
+    name: ejabberd
+    enabled: true
+    state: started
+
 - name: Create contrib modules directory
   ansible.builtin.file:
     path: /opt/ejabberd-modules/sources/
