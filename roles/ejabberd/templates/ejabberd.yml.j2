@@ -245,6 +245,9 @@ shaper:
     rate: 1000
     burst_size: 20000
   fast: 200000
+  faster:
+    rate: 1000000
+    burst_size: 10000000
 
 shaper_rules:
   max_user_sessions: 10
@@ -253,7 +256,7 @@ shaper_rules:
     100: all
   c2s_shaper:
     - none: admin
-    - fast: bots
+    - faster: bots
     - normal
   s2s_shaper: fast
 
