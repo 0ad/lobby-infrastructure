@@ -4,9 +4,16 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "debian/testing64"  # TODO: change to bookworm64 once available
 
+  config.vm.provider :virtualbox do |vb|
+      vb.memory = 1024
+  end
+
   config.vm.hostname = "lobby"
 
-  config.vm.provision "ansible" do |ansible|
+  config.vm.provision "shell",
+    inline: "apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install -y acl"
+
+  config.vm.provision "ansible_local" do |ansible|
     ansible.galaxy_command = "ansible-galaxy install --role-file=%{role_file}"
     ansible.galaxy_role_file = "requirements.yml"
     ansible.raw_arguments = ["--diff", "--extra-vars", "is_vagrant=true"]
