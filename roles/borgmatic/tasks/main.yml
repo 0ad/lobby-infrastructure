@@ -1,0 +1,70 @@
+---
+- name: Install borgmatic
+  ansible.builtin.apt:
+    name: borgmatic
+    state: present
+
+- name: Create config directory
+  ansible.builtin.file:
+    path: /etc/borgmatic
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Create backup scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0700
+  loop:
+    - dump-ejabberd.sh
+    - dump-sqlite.sh
+
+- name: Configure borgmatic
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: /etc/borgmatic/config.yaml
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Create borg repository directory
+  ansible.builtin.file:
+    path: "{{ borg_repo_location }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Create Borg repository
+  ansible.builtin.command: borgmatic rcreate --encryption none
+  args:
+    creates: "{{ borg_repo_location }}/data"
+
+- name: Create directory for borgmatic specific systemd configuration
+  ansible.builtin.file:
+    path: /etc/systemd/system/borgmatic.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install systemd override file for borgmatic
+  ansible.builtin.copy:
+    src: borgmatic-service-override.conf
+    dest: /etc/systemd/system/borgmatic.service.d/override.conf
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Ensure systemd units for borgmatic are enabled
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    daemon_reload: true
+  loop:
+    - borgmatic.service
+    - borgmatic.timer
