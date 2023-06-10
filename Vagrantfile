@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "debian/testing64"  # TODO: change to bookworm64 once available
+  config.vm.box = "debian/bookworm64"
 
   config.vm.provider :virtualbox do |vb|
       vb.memory = 1024
