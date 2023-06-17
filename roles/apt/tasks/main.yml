@@ -2,3 +2,18 @@
 - name: Update the apt cache
   ansible.builtin.apt:
     update_cache: true
+
+- name: Install unattended-upgrade
+  ansible.builtin.apt:
+    name: unattended-upgrades
+
+- name: Configure unattended-upgrades
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/apt/apt.conf.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - 20auto-upgrades
+    - 50unattended-upgrades
