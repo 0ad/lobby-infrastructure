@@ -38,6 +38,23 @@
     enabled: true
     state: started
 
+- name: Create directory for journald config drop-ins
+  ansible.builtin.file:
+    path: /etc/systemd/journald.conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Configure journald
+  ansible.builtin.copy:
+    src: journal-size.conf
+    dest: /etc/systemd/journald.conf.d/journal-size.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart journald
+
 # That's a workaround to ensure the bots always connect to localhost,
 # as Slixmpp currently doesn't honor explicitly configured addresses
 # used to connect for reconnections.
