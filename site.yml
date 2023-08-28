@@ -2,17 +2,10 @@
 - name: Provision lobby
   hosts: all
   become: true
-  vars:
-    is_vagrant: false
   pre_tasks:
     - name: Load lobby config
       ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/lobby-config.yml"
-      when: not is_vagrant
-    - name: Load lobby config for Vagrant
-      ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/lobby-config-vagrant.yml"
-      when: is_vagrant
+        file: "{{ playbook_dir }}/config-{{ inventory_hostname }}.yml"
   roles:
     - apt
     - ssh
@@ -27,9 +20,8 @@
   post_tasks:
     - name: Push Ansible variable file with sensitive lobby parameters
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/lobby-config.yml"
+        src: "{{ playbook_dir }}/config-{{ inventory_hostname }}.yml"
         dest: /root/lobby-config.yml
         owner: root
         group: root
         mode: 0600
-      become: true

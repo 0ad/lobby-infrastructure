@@ -89,8 +89,9 @@ SSH configuration by defining a host alias.
 2. Connect via SSH and manually ensure that the `python3` and `python3-apt` packages are installed,
    as they're required for Ansible to run.
 3. Configure the `hosts` file, so it matches your SSH config in terms of hostname and username.
-4. Create a file called `lobby-config.xml` in the project directory and configure it, so it fits
-   your needs.
+4. Create a file called `config-${hostname}.yml` in the project directory, where `${hostname}` is
+   the hostname of the lobby you configured in the `hosts` file. Then adjust the configuration,
+   so it fits your needs. An example configuration is available in `config-lobby-vagrant.yml`.
 5. Deploy the lobby:
 
    ```shell
@@ -107,7 +108,7 @@ SSH configuration by defining a host alias.
    ansible-playbook fetch-config.yml
    ```
 
-3. Change any parameters in `lobby-config.xml` you'd like to change.
+3. Change any parameters in `config-${hostname}.yml` you'd like to change.
 4. Check what applying the playbook would change:
 
    ```shell

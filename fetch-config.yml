@@ -1,9 +1,10 @@
 ---
 - name: Fetch sensitive lobby parameters
-  hosts: wfg-lobby
+  hosts: all
+  become: true
   tasks:
     - name: Fetch Ansible variable file with sensitive lobby parameters
       ansible.builtin.fetch:
         src: /root/lobby-config.yml
-        dest: "{{ playbook_dir }}/lobby-config.yml"
-      become: true
+        dest: "{{ playbook_dir }}/config-{{ inventory_hostname }}.yml"
+        flat: true

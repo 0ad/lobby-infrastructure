@@ -3,4 +3,5 @@ __pycache__/
 .idea
 .vagrant
 hosts
-lobby-config.yml
+config-*.yml
+!config-lobby-vagrant.yml
