@@ -6,7 +6,7 @@ set -e
 
 mkdir -p /tmp/borgmatic/ejabberd/
 
-ejabberdctl backup /tmp/ejabberd.backup
+ejabberdctl --no-timeout backup /tmp/ejabberd.backup
 
 # ejabberd uses PrivateTmp, so lets use this hack to copy the backup
 # to the place where we expect it for borgmatic.
