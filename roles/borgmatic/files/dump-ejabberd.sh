@@ -17,7 +17,7 @@ if [ "$PRIVATE_TMP_BACKUP_LOCATION" = "" ]; then
   exit 1
 fi
 
-if [ $(echo "$PRIVATE_TMP_BACKUP_LOCATION" | wc -l) -gt 1 ]; then
+if [ "$(echo "$PRIVATE_TMP_BACKUP_LOCATION" | wc -l)" -gt 1 ]; then
   echo "Something went wrong. Found more than one backup."
   exit 1
 fi

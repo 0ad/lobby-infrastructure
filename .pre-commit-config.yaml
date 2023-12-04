@@ -23,3 +23,8 @@ repos:
     rev: v6.14.2
     hooks:
       - id: ansible-lint
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.9.0
+    hooks:
+      - id: shellcheck
