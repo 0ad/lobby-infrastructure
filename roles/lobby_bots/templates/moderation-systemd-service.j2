@@ -8,9 +8,10 @@ Type=exec
 User={{ bot.name }}
 Environment=PATH={{ lobby_bot_base_dir }}/{{ bot.name }}/code/bin
 EnvironmentFile={{ lobby_config_dir }}/{{ bot.name }}
-ExecStart=python3 {{ lobby_bot_base_dir }}/{{ bot.name }}/code/bin/moderation \
+ExecStart=python3 {{ lobby_bot_base_dir }}/{{ bot.name }}/code/bin/modbot \
           --login ${LOGIN} --password ${PASSWORD} --nickname ${NICKNAME} --domain ${HOST} \
-          --rooms {%- for room in bot.config.ROOMS.split(" ") %} {{ room }}{%- endfor %} -d -t \
+          --rooms {%- for room in bot.config.ROOMS.split(" ") %} {{ room }}{%- endfor %} -d \
+          --command-room ${COMMAND_ROOM} --no-verify \
           --database-url sqlite:////{{ lobby_bot_base_dir }}/{{ bot.name }}/db.sqlite
 Restart=on-failure
 

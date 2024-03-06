@@ -43,43 +43,17 @@ bots: [
     }
   },
   {
-    "name": "chat-monitor",
+    "name": "modbot",
     "jid": "moderation-bot@localhost",
-    "source": "git+https://gitlab.com/0ad/lobby-moderation@master",
-    "type": "chat-monitor",
-    "config": {
-      "LOGIN": "moderation-bot",
-      "PASSWORD": "moderation-bot",
-      "NICKNAME": "ModerationBot",
-      "HOST": "localhost",
-      "ROOMS": "arena"
-    }
-  },
-  {
-    "name": "chatbot-interface",
-    "jid": "moderation-bot@localhost",
-    "source": "git+https://gitlab.com/0ad/lobby-moderation@master",
-    "type": "chatbot-interface",
-    "config": {
-      "LOGIN": "moderation-bot",
-      "PASSWORD": "moderation-bot",
-      "NICKNAME": "ModerationBot",
-      "HOST": "localhost",
-      "COMMAND_ROOM": "moderation",
-      "COMMAND_PASSWORD": "moderation"
-    }
-  },
-  {
-    "name": "moderation",
-    "jid": "moderation-bot@localhost",
-    "source": "git+https://gitlab.com/0ad/lobby-moderation@master",
+    "source": "git+https://github.com/0ad/lobby-bots@master",
     "type": "moderation",
     "config": {
       "LOGIN": "moderation-bot",
       "PASSWORD": "moderation-bot",
       "NICKNAME": "ModerationBot",
       "HOST": "localhost",
-      "ROOMS": "arena"
+      "ROOMS": "arena",
+      "COMMAND_ROOM": "moderation"
     }
   },
 ]

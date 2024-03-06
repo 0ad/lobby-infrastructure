@@ -21,7 +21,7 @@ consistency:
 hooks:
     before_backup:
         - /usr/local/bin/dump-ejabberd.sh
-{% for bot in bots | selectattr('type', 'in', ['echelon', 'chat-monitor', 'moderation']) %}
+{% for bot in bots | selectattr('type', 'in', ['echelon', 'moderation']) %}
         - /usr/local/bin/dump-sqlite.sh /opt/lobby/{{ bot.name }}/db.sqlite {{ bot.name }}
 {% endfor %}
 

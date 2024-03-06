@@ -42,7 +42,7 @@
   loop_control:
     loop_var: bot
 
-- name: Check if databases for lobby-bots exist
+- name: Check if database for echelon exist
   ansible.builtin.stat:
     path: "/{{ lobby_bot_base_dir }}/{{ bot.name }}/db.sqlite"
   changed_when: false
@@ -51,7 +51,7 @@
   loop_control:
     loop_var: bot
 
-- name: Create sqlite databases for lobby-bots
+- name: Create sqlite database for echelon
   ansible.builtin.command: "{{ lobby_bot_base_dir }}/{{ item.bot.name }}/code/bin/python
     -m xpartamupp.lobby_ranking create
     --database-url sqlite:////{{ lobby_bot_base_dir }}/{{ item.bot.name }}/db.sqlite"
@@ -62,18 +62,18 @@
   changed_when: false
   loop: "{{ sqlite_db_exists.results }}"
 
-- name: Check if databases for lobby-moderation exist
+- name: Check if database for the moderation bot exist
   ansible.builtin.stat:
     path: "/{{ lobby_bot_base_dir }}/{{ bot.name }}/db.sqlite"
   changed_when: false
   register: sqlite_db_exists_moderation
-  loop: "{{ bots | selectattr('type', 'in', ['chat-monitor', 'moderation']) }}"
+  loop: "{{ bots | selectattr('type', 'equalto', 'moderation') }}"
   loop_control:
     loop_var: bot
 
-- name: Create sqlite databases for lobby-moderation
+- name: Create sqlite database for the moderation bot
   ansible.builtin.command: "{{ lobby_bot_base_dir }}/{{ item.bot.name }}/code/bin/python
-    -m moderation.data.create_db
+    -m xpartamupp.lobby_moderation_db create
     --database-url sqlite:////{{ lobby_bot_base_dir }}/{{ item.bot.name }}/db.sqlite"
   become: true
   become_method: community.general.sudosu
