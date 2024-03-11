@@ -33,7 +33,7 @@
 
 - name: Create borg repository directory
   ansible.builtin.file:
-    path: "{{ borg_repo_location }}"
+    path: "{{ borgmatic_borg_repo_location }}"
     state: directory
     owner: root
     group: root
@@ -42,7 +42,7 @@
 - name: Create Borg repository
   ansible.builtin.command: borgmatic rcreate --encryption none
   args:
-    creates: "{{ borg_repo_location }}/data"
+    creates: "{{ borgmatic_borg_repo_location }}/data"
 
 - name: Create directory for borgmatic specific systemd configuration
   ansible.builtin.file:

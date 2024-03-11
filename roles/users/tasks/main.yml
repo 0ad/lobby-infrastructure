@@ -1,12 +1,12 @@
 ---
 - name: Add a group for the admins
   ansible.builtin.group:
-    name: "{{ lobby_admin_group_name }}"
+    name: "{{ users_lobby_admin_group_name }}"
 
 - name: Configure sudo permissions for lobby admins
   ansible.builtin.template:
     src: sudoers.j2
-    dest: "/etc/sudoers.d/{{ lobby_admin_group_name }}"
+    dest: "/etc/sudoers.d/{{ users_lobby_admin_group_name }}"
     owner: root
     group: root
     mode: 0440
@@ -15,7 +15,7 @@
   ansible.builtin.user:
     name: "{{ user.username }}"
     groups:
-      - "{{ lobby_admin_group_name }}"
+      - "{{ users_lobby_admin_group_name }}"
     create_home: true
     shell: /bin/bash
   loop: "{{ admins }}"

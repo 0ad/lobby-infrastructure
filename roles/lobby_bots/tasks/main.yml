@@ -8,22 +8,22 @@
 
 - name: Add a common group for bots
   ansible.builtin.group:
-    name: "{{ lobby_bot_group_name }}"
+    name: "{{ lobby_bots_group_name }}"
     system: true
 
 - name: Create lobby bot base directory
   ansible.builtin.file:
-    path: "{{ lobby_bot_base_dir }}"
+    path: "{{ lobby_bots_base_dir }}"
     state: directory
     owner: "root"
-    group: "{{ lobby_bot_group_name }}"
+    group: "{{ lobby_bots_group_name }}"
     mode: 0755
 
 - name: Add users for the bots
   ansible.builtin.user:
     name: "{{ bot.name }}"
-    group: "{{ lobby_bot_group_name }}"
-    home: "{{ lobby_bot_base_dir }}/{{ bot.name }}"
+    group: "{{ lobby_bots_group_name }}"
+    home: "{{ lobby_bots_base_dir }}/{{ bot.name }}"
     create_home: true
     shell: /bin/sh
     system: true
@@ -34,7 +34,7 @@
 - name: Install lobby-bots code
   ansible.builtin.pip:
     name: "{{ bot.source }}"
-    virtualenv: "{{ lobby_bot_base_dir }}/{{ bot.name }}/code"
+    virtualenv: "{{ lobby_bots_base_dir }}/{{ bot.name }}/code"
   become: true
   become_method: community.general.sudosu
   become_user: "{{ bot.name }}"
@@ -44,7 +44,7 @@
 
 - name: Check if database for echelon exist
   ansible.builtin.stat:
-    path: "/{{ lobby_bot_base_dir }}/{{ bot.name }}/db.sqlite"
+    path: "/{{ lobby_bots_base_dir }}/{{ bot.name }}/db.sqlite"
   changed_when: false
   register: sqlite_db_exists
   loop: "{{ bots | selectattr('type', 'equalto', 'echelon') }}"
@@ -52,9 +52,9 @@
     loop_var: bot
 
 - name: Create sqlite database for echelon
-  ansible.builtin.command: "{{ lobby_bot_base_dir }}/{{ item.bot.name }}/code/bin/python
+  ansible.builtin.command: "{{ lobby_bots_base_dir }}/{{ item.bot.name }}/code/bin/python
     -m xpartamupp.lobby_ranking create
-    --database-url sqlite:////{{ lobby_bot_base_dir }}/{{ item.bot.name }}/db.sqlite"
+    --database-url sqlite:////{{ lobby_bots_base_dir }}/{{ item.bot.name }}/db.sqlite"
   become: true
   become_method: community.general.sudosu
   become_user: "{{ item.bot.name }}"
@@ -64,7 +64,7 @@
 
 - name: Check if database for the moderation bot exist
   ansible.builtin.stat:
-    path: "/{{ lobby_bot_base_dir }}/{{ bot.name }}/db.sqlite"
+    path: "/{{ lobby_bots_base_dir }}/{{ bot.name }}/db.sqlite"
   changed_when: false
   register: sqlite_db_exists_moderation
   loop: "{{ bots | selectattr('type', 'equalto', 'moderation') }}"
@@ -72,9 +72,9 @@
     loop_var: bot
 
 - name: Create sqlite database for the moderation bot
-  ansible.builtin.command: "{{ lobby_bot_base_dir }}/{{ item.bot.name }}/code/bin/python
+  ansible.builtin.command: "{{ lobby_bots_base_dir }}/{{ item.bot.name }}/code/bin/python
     -m xpartamupp.lobby_moderation_db create
-    --database-url sqlite:////{{ lobby_bot_base_dir }}/{{ item.bot.name }}/db.sqlite"
+    --database-url sqlite:////{{ lobby_bots_base_dir }}/{{ item.bot.name }}/db.sqlite"
   become: true
   become_method: community.general.sudosu
   become_user: "{{ item.bot.name }}"
@@ -84,7 +84,7 @@
 
 - name: Create config directory
   ansible.builtin.file:
-    path: "{{ lobby_config_dir }}"
+    path: "{{ lobby_bots_config_dir }}"
     state: directory
     owner: root
     group: root
@@ -93,7 +93,7 @@
 - name: Create config file
   ansible.builtin.template:
     src: environment-file.j2
-    dest: "{{ lobby_config_dir }}/{{ bot.name }}"
+    dest: "{{ lobby_bots_config_dir }}/{{ bot.name }}"
     owner: root
     group: root
     mode: 0600
