@@ -1,4 +1,31 @@
 ---
+- name: Set the default umask to 077
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^UMASK\t'
+    line: "UMASK\t\t077"
+    state: present
+
+- name: Use pam_umask to enforce the file mode creation umask
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/common-session
+    regexp: 'pam_umask\.so'
+    line: "session\toptional\tpam_umask.so"
+    state: present
+
+- name: Get all skeleton files
+  ansible.builtin.find:
+    paths: /etc/skel
+    hidden: true
+    recurse: true
+  register: skeleton_files
+
+- name: Change file permissions of skeleton files
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: 0700
+  loop: "{{ skeleton_files.files }}"
+
 - name: Ensure undesired ntp services aren't installed
   ansible.builtin.apt:
     name:
