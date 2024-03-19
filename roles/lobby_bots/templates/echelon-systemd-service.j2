@@ -27,6 +27,13 @@ ProtectKernelLogs=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectSystem=full
+SystemCallArchitectures=native
+SystemCallFilter=access arch_prctl brk close connect epoll_create1 epoll_ctl epoll_wait fchmod
+SystemCallFilter=fcntl fdatasync futex getcwd getdents64 geteuid getpeername getpid getrandom
+SystemCallFilter=getsockname getsockopt gettid ioctl lseek mmap mprotect mremap munmap newfstatat
+SystemCallFilter=openat pread64 prlimit64 pwrite64 read readlink recvfrom rseq rt_sigaction sendto
+SystemCallFilter=set_robust_list setsockopt set_tid_address socket socketpair sysinfo uname unlink
+SystemCallFilter=write
 
 [Install]
 WantedBy=multi-user.target
