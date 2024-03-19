@@ -30,7 +30,16 @@
       - sqlite3
       - sudo
       - systemd-timesyncd
+      - tzdata
     state: present
+
+- name: Ensure timezone is set to UTC
+  ansible.builtin.file:
+    src: /usr/share/zoneinfo/Etc/UTC
+    path: /etc/localtime
+    owner: root
+    group: root
+    state: link
 
 - name: Enable systemd timesyncd
   ansible.builtin.systemd:
