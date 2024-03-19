@@ -6,9 +6,9 @@ After=network.target ejabberd.service
 [Service]
 Type=exec
 User={{ bot.name }}
-Environment=PATH={{ lobby_bot_base_dir }}/{{ bot.name }}/code/bin
-EnvironmentFile={{ lobby_config_dir }}/{{ bot.name }}
-ExecStart=python3 {{lobby_bot_base_dir }}/{{ bot.name }}/code/bin/xpartamupp \
+Environment=PATH={{ lobby_bots_base_dir }}/{{ bot.name }}/code/bin
+EnvironmentFile={{ lobby_bots_config_dir }}/{{ bot.name }}
+ExecStart=python3 {{lobby_bots_base_dir }}/{{ bot.name }}/code/bin/xpartamupp \
           --login ${LOGIN} --password ${PASSWORD} --nickname ${NICKNAME} --domain ${HOST} \
           --room ${ROOM} -d --no-verify
 Restart=on-failure
