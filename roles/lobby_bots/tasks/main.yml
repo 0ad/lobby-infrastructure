@@ -189,13 +189,13 @@
 
 - name: Check for existing lobby bot directories
   ansible.builtin.command:
-    cmd: "ls -1 {{ lobby_bot_base_dir }}/"
+    cmd: "ls -1 {{ lobby_bots_base_dir }}/"
   changed_when: false
   register: lobby_bot_dirs
 
 - name: Remove outdated lobby bot directories
   ansible.builtin.file:
-    path: "{{ lobby_bot_base_dir }}/{{ bot_name }}"
+    path: "{{ lobby_bots_base_dir }}/{{ bot_name }}"
     state: absent
   loop: "{{ lobby_bot_dirs.stdout_lines }}"
   loop_control:
