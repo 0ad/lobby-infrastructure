@@ -88,15 +88,23 @@
     state: directory
     owner: root
     group: root
-    mode: 0700
+    mode: 0755
 
-- name: Create config file
-  ansible.builtin.template:
-    src: environment-file.j2
-    dest: "{{ lobby_bots_config_dir }}/{{ bot.name }}"
-    owner: root
+- name: Delete old config files
+  ansible.builtin.file:
+    path: "{{ lobby_bots_config_dir }}/{{ bot.name }}"
+    state: absent
+  loop: "{{ bots }}"
+  loop_control:
+    loop_var: bot
+
+- name: Create config files
+  ansible.builtin.copy:
+    content: "{{ bot.config | to_toml }}"
+    dest: "{{ lobby_bots_config_dir }}/{{ bot.name }}.toml"
+    owner: "{{ bot.name }}"
     group: root
-    mode: 0600
+    mode: 0660
   loop: "{{ bots }}"
   loop_control:
     loop_var: bot
@@ -113,7 +121,7 @@
 
 - name: Create ejabberd accounts if they don't exist yet
   ansible.builtin.command: "ejabberdctl register {{ user.bot.jid.split('@')[0] }}
-    {{ user.bot.jid.split('@')[1] }} {{ user.bot.config.PASSWORD }}"
+    {{ user.bot.jid.split('@')[1] }} {{ user.bot.config.password }}"
   when: user.rc == 1
   changed_when: false
   loop: "{{ ejabberd_users_present.results }}"

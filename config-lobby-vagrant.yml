@@ -22,11 +22,13 @@ bots: [
     "source": "git+https://github.com/0ad/lobby-bots@master",
     "type": "xpartamupp",
     "config": {
-      "LOGIN": "xpartamupp",
-      "PASSWORD": xpartamupp,
-      "NICKNAME": "WFGBot",
-      "HOST": "localhost",
-      "ROOM": "arena"
+      "login": "xpartamupp",
+      "password": xpartamupp,
+      "nickname": "WFGBot",
+      "domain": "localhost",
+      "room": "arena",
+      "no_verify": true,
+      "verbosity": 3
     }
   },
   {
@@ -35,11 +37,13 @@ bots: [
     "source": "git+https://github.com/0ad/lobby-bots@master",
     "type": "echelon",
     "config": {
-      "LOGIN": "echelon",
-      "PASSWORD": echelon,
-      "NICKNAME": "RatingsBot",
-      "HOST": "localhost",
-      "ROOM": "arena"
+      "login": "echelon",
+      "password": echelon,
+      "nickname": "RatingsBot",
+      "domain": "localhost",
+      "room": "arena",
+      "no_verify": true,
+      "verbosity": 3
     }
   },
   {
@@ -48,12 +52,14 @@ bots: [
     "source": "git+https://github.com/0ad/lobby-bots@master",
     "type": "moderation",
     "config": {
-      "LOGIN": "moderation-bot",
-      "PASSWORD": "moderation-bot",
-      "NICKNAME": "ModerationBot",
-      "HOST": "localhost",
-      "ROOMS": "arena",
-      "COMMAND_ROOM": "moderation"
+      "login": "moderation-bot",
+      "password": "moderation-bot",
+      "nickname": "ModerationBot",
+      "domain": "localhost",
+      "rooms": ["arena"],
+      "command_room": "moderation",
+      "no_verify": true,
+      "verbosity": 3
     }
   },
 ]

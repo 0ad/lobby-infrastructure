@@ -7,11 +7,9 @@ After=network.target ejabberd.service
 Type=exec
 User={{ bot.name }}
 Environment=PATH={{ lobby_bots_base_dir }}/{{ bot.name }}/code/bin
-EnvironmentFile={{ lobby_bots_config_dir }}/{{ bot.name }}
 ExecStart=python3 {{ lobby_bots_base_dir }}/{{ bot.name }}/code/bin/echelon \
-          --login ${LOGIN} --password ${PASSWORD} --nickname ${NICKNAME} --domain ${HOST} \
-          --room ${ROOM} -d --no-verify \
-           --database-url sqlite:////{{ lobby_bots_base_dir }}/{{ bot.name }}/db.sqlite
+          --config-file {{ lobby_bots_config_dir }}/{{ bot.name }}.toml \
+          --database-url sqlite:////{{ lobby_bots_base_dir }}/{{ bot.name }}/db.sqlite
 Restart=on-failure
 
 NoNewPrivileges=true
