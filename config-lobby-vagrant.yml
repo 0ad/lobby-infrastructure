@@ -24,7 +24,7 @@ bots: [
     "config": {
       "login": "xpartamupp",
       "password": xpartamupp,
-      "nickname": "WFGBot",
+      "nickname": "XpartaMuPP",
       "domain": "localhost",
       "room": "arena",
       "no_verify": true,
@@ -39,7 +39,7 @@ bots: [
     "config": {
       "login": "echelon",
       "password": echelon,
-      "nickname": "RatingsBot",
+      "nickname": "EcheLOn",
       "domain": "localhost",
       "room": "arena",
       "no_verify": true,
