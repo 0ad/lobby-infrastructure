@@ -24,11 +24,3 @@
     {{ room.key | split('@') | last }} description '{{ room.value }}'"
   when: room_exists.rc == 1
   changed_when: false
-
-# Somehow the max_users default room option in ejabberd.yml doesn't
-# seem to work, so we have to manually do it here.
-- name: Set maximum room users
-  ansible.builtin.command: "ejabberdctl change_room_option {{ room.key | split('@') | first }}
-    {{ room.key | split('@') | last }} max_users 1000"
-  when: room_exists.rc == 1
-  changed_when: false
