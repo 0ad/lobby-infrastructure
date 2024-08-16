@@ -194,6 +194,8 @@ access_rules:
   ## Expected by the ipstamp module for XpartaMuPP
   ipbots:
     - allow: ipbots
+  mam_modify:
+    - deny
   muc_admin:
     - allow: admin
     - allow: muc_admins
@@ -283,7 +285,8 @@ modules:
   ## ipstamp module used by XpartaMuPP to insert IP addresses into the gamelist
   mod_ipstamp: {}
   mod_last: {}
-  ## mod_mam:
+  mod_mam:
+    access_preferences: mam_modify
   ##   ## Mnesia is limited to 2GB, better to use an SQL backend
   ##   ## For small servers SQLite is a good fit and is very easy
   ##   ## to configure. Uncomment this when you have SQL configured:
