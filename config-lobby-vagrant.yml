@@ -93,6 +93,10 @@ ejabberd_muc_admins: [
 # item is the JID of the MUC room and the value is used as room
 # description.
 ejabberd_lobby_muc_rooms: {
-  "arena@conference.localhost": "0 A.D. Multiplayer Lobby",
-  "moderation@conference.localhost": "Room for moderators"
+  "arena@conference.localhost": {
+    "description": "0 A.D. Multiplayer Lobby"
+  },
+  "moderation@conference.localhost": {
+    "description": "Room for moderators"
+  }
 }
