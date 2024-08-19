@@ -1,0 +1,23 @@
+[Unit]
+Description=Deletion of MAM messages stored by ejabberd
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/ejabberdctl delete_old_mam_messages all 31
+
+User=ejabberd
+Group=ejabberd
+
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateMounts=true
+PrivateTmp=true
+PrivateUsers=false
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=true

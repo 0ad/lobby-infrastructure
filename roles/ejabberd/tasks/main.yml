@@ -34,6 +34,29 @@
     state: started
     daemon_reload: true
 
+- name: Systemd service unit deleting old MAM messages
+  ansible.builtin.copy:
+    src: ejabberd-delete-old-mam-messages.service
+    dest: /etc/systemd/system/ejabberd-delete-old-mam-messages.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Systemd timer for deleting old MAM messages
+  ansible.builtin.copy:
+    src: ejabberd-delete-old-mam-messages.timer
+    dest: /etc/systemd/system/ejabberd-delete-old-mam-messages.timer
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable systemd timer for deleting old MAM messages
+  ansible.builtin.systemd:
+    name: ejabberd-delete-old-mam-messages.timer
+    enabled: true
+    state: started
+    daemon_reload: true
+
 - name: Create /etc/default/ejabberd
   ansible.builtin.template:
     src: ejabberd-default.j2

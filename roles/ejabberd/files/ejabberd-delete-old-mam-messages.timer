@@ -1,0 +1,10 @@
+[Unit]
+Description=Run monthly deletion of MAM messages stored by ejabberd
+
+[Timer]
+OnCalendar=monthly
+RandomizedDelaySec=1h
+FixedRandomDelay=true
+
+[Install]
+WantedBy=timers.target
