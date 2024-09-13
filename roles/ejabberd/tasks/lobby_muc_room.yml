@@ -10,17 +10,39 @@
   ansible.builtin.command: "ejabberdctl create_room {{ room.key | split('@') | first }}
     {{ room.key | split('@') | last }}
     {{ room.key | split('@') | last | regex_replace('^conference\\.(.*)$', '\\1') }}"
+  changed_when: true
   when: room_exists.rc == 1
+
+- name: Get room title
+  ansible.builtin.shell:  # noqa: risky-shell-pipe
+    cmd: "ejabberdctl get_room_options {{ room.key | split('@') | first }}
+      {{ room.key | split('@') | last }} | grep -Ex 'title\\s+{{ room.key | split('@') | first }}'"
   changed_when: false
+  failed_when: false
+  register: room_title
 
 - name: Set room title
   ansible.builtin.command: "ejabberdctl change_room_option {{ room.key | split('@') | first }}
     {{ room.key | split('@') | last }} title {{ room.key | split('@') | first }}"
-  when: room_exists.rc == 1
-  changed_when: false
+  when: room_title.rc == 1
+  changed_when: true
 
-- name: Set room description
-  ansible.builtin.command: "ejabberdctl change_room_option {{ room.key | split('@') | first }}
-    {{ room.key | split('@') | last }} description '{{ room.value }}'"
-  when: room_exists.rc == 1
+- name: Get room option
+  ansible.builtin.shell:  # noqa: risky-shell-pipe
+    cmd: "ejabberdctl get_room_options {{ room.key | split('@') | first }}
+      {{ room.key | split('@') | last }} | grep -Ex '{{ option.key }}\\s+{{ option.value }}'"
   changed_when: false
+  failed_when: false
+  loop: "{{ room.value | dict2items }}"
+  loop_control:
+    loop_var: option
+  register: room_options
+
+- name: Set room option
+  ansible.builtin.command: "ejabberdctl change_room_option {{ room.key | split('@') | first }}
+    {{ room.key | split('@') | last }} {{ option.key }} '{{ room.value[option.key] }}'"
+  loop: >
+    {{ room_options.results | selectattr('rc', 'equalto', 1) | map(attribute='option') }}
+  loop_control:
+    loop_var: option
+  changed_when: true
