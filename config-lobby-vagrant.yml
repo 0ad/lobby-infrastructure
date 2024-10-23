@@ -59,7 +59,8 @@ bots: [
       "rooms": ["arena"],
       "command_room": "moderation",
       "no_verify": true,
-      "verbosity": 3
+      "verbosity": 3,
+      "enable_profanity_monitoring": true
     }
   },
 ]
