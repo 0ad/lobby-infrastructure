@@ -321,7 +321,9 @@ modules:
   mod_offline:
     access_max_user_messages: max_user_offline_messages
   mod_ping:
+    ping_ack_timeout: 30s
     send_pings: true
+    timeout_action: kill
 #  mod_pres_counter:
 #    count: 5
 #    interval: 60
