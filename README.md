@@ -42,9 +42,10 @@ For testing purposes you can provision a virtual machine with a complete setup u
    pyrogenesis \
      -conf=lobby.room:arena \
      -conf=lobby.server:localhost \
+     -conf=lobby.verify_certificate:false \
+     -conf=lobby.stun.server:localhost \
      -conf=lobby.xpartamupp:xpartamupp \
-     -conf=lobby.echelon:echelon \
-     -conf=lobby.verify_certificate:false
+     -conf=lobby.echelon:echelon
    ```
 
 6. In the game create a new multiplayer account. This account will be created on the local lobby
