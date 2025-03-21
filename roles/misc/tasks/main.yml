@@ -47,6 +47,8 @@
       - iotop
       - iptables
       - less
+      - lsof
+      - lvm2
       - molly-guard
       - mtr-tiny
       - nano
@@ -58,6 +60,7 @@
       - sudo
       - systemd-timesyncd
       - tzdata
+      - zstd
     state: present
 
 - name: Ensure timezone is set to UTC
