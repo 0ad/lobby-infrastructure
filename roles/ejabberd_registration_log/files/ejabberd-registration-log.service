@@ -1,0 +1,25 @@
+[Unit]
+Description=ejabberd registration logging
+
+[Service]
+Type=exec
+User=ejabberd-registration-log
+ExecStart=/opt/ejabberd-registration-log.py
+Restart=on-failure
+
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateMounts=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
