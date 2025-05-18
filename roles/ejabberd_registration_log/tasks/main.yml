@@ -1,4 +1,10 @@
 ---
+- name: Install python3-systemd
+  ansible.builtin.apt:
+    name:
+      - python3-systemd
+    state: present
+
 - name: Add ejabberd-registration-log group
   ansible.builtin.group:
     name: ejabberd-registration-log
