@@ -1,0 +1,5 @@
+---
+- name: Restart ejabberd-registration-log
+  ansible.builtin.systemd:
+    name: ejabberd-registration-log
+    state: restarted

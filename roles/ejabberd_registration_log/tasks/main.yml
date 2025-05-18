@@ -1,0 +1,40 @@
+---
+- name: Add ejabberd-registration-log group
+  ansible.builtin.group:
+    name: ejabberd-registration-log
+    system: true
+    state: present
+
+- name: Add ejabberd-registration-log user
+  ansible.builtin.user:
+    name: ejabberd-registration-log
+    group: ejabberd-registration-log
+    groups:
+      - systemd-journal
+    create_home: false
+    shell: /bin/false
+    system: true
+
+- name: Copy ejabberd-registration-log.py
+  ansible.builtin.copy:
+    src: ejabberd-registration-log.py
+    dest: /opt/ejabberd-registration-log.py
+    owner: ejabberd-registration-log
+    group: ejabberd-registration-log
+    mode: 0755
+  notify: Restart ejabberd-registration-log
+
+- name: Create systemd service file
+  ansible.builtin.copy:
+    src: ejabberd-registration-log.service
+    dest: /etc/systemd/system/ejabberd-registration-log.service
+    owner: ejabberd-registration-log
+    group: ejabberd-registration-log
+    mode: 0644
+
+- name: Enable and start the systemd service
+  ansible.builtin.systemd:
+    name: ejabberd-registration-log
+    enabled: true
+    state: started
+    daemon_reload: true
