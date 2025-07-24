@@ -1,4 +1,16 @@
 ---
+- name: Enable backports for Debian 12 (Bookworm)
+  ansible.builtin.lineinfile:
+    path: /etc/apt/sources.list
+    regexp: '^deb https://deb.debian.org/debian bookworm-backports main'
+    line: deb https://deb.debian.org/debian bookworm-backports main
+
+- name: Enable source package backports for Debian 12 (Bookworm)
+  ansible.builtin.lineinfile:
+    path: /etc/apt/sources.list
+    regexp: '^deb-src https://deb.debian.org/debian bookworm-backports main'
+    line: deb-src https://deb.debian.org/debian bookworm-backports main
+
 - name: Update the apt cache
   ansible.builtin.apt:
     update_cache: true
