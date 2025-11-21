@@ -25,12 +25,13 @@ ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectSystem=full
 SystemCallArchitectures=native
-SystemCallFilter=access arch_prctl brk close connect epoll_create1 epoll_ctl epoll_wait fchmod
-SystemCallFilter=fcntl fdatasync fstat futex getcwd getdents64 geteuid getpeername getpid getrandom
-SystemCallFilter=getsockname getsockopt gettid ioctl lseek mkdir mmap mprotect mremap munmap
-SystemCallFilter=newfstatat openat pread64 prlimit64 pwrite64 read readlink recvfrom rseq
-SystemCallFilter=rt_sigaction sendto set_robust_list setsockopt set_tid_address socket socketpair
-SystemCallFilter=sysinfo uname unlink write
+SystemCallFilter=access arch_prctl brk clone3 close connect epoll_create1 epoll_ctl epoll_wait
+SystemCallFilter=fchmod fcntl fdatasync fstat futex getcwd getdents64 geteuid getpeername getpid
+SystemCallFilter=getrandom getsockname getsockopt gettid ioctl inotify_add_watch inotify_init1
+SystemCallFilter=lseek madvise mkdir mmap mprotect mremap munmap newfstatat open openat pipe2
+SystemCallFilter=pread64 prlimit64 pwrite64 read readlink recvfrom rseq rt_sigaction rt_sigprocmask
+SystemCallFilter=sendto set_robust_list setsockopt set_tid_address socket socketpair sysinfo uname
+SystemCallFilter=unlink write
 
 [Install]
 WantedBy=multi-user.target
